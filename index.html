@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Calcolatore Danni</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+
+    background:#202020;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+
+}
+
+.container{
+
+    width:720px;
+    background:#2e2e2e;
+    border-radius:12px;
+    box-shadow:0 0 20px rgba(0,0,0,.5);
+    overflow:hidden;
+
+}
+
+table{
+
+    width:100%;
+    border-collapse:collapse;
+
+}
+
+th,td{
+
+    border:2px solid #111;
+    text-align:center;
+    padding:15px;
+
+}
+
+th{
+
+    font-size:28px;
+
+}
+
+.attacco{
+
+    background:#d32f2f;
+    color:white;
+
+}
+
+.resistenza{
+
+    background:#fbc02d;
+    color:black;
+
+}
+
+.input{
+
+    background:#aed581;
+
+}
+
+input{
+
+    width:100%;
+    background:transparent;
+    border:none;
+    text-align:center;
+    font-size:42px;
+    font-weight:bold;
+    outline:none;
+
+}
+
+.fascia{
+
+    margin-top:10px;
+    font-size:22px;
+    font-weight:bold;
+
+}
+
+select{
+
+    margin-top:10px;
+    font-size:18px;
+    padding:6px;
+    border-radius:6px;
+
+}
+
+.dannoTitolo{
+
+    background:#ffee58;
+    color:black;
+    font-size:28px;
+
+}
+
+.danno{
+
+    background:#b71c1c;
+    color:white;
+    font-size:60px;
+    font-weight:bold;
+
+}
+
+.bianca{color:white;}
+.gialla{color:#ffee58;}
+.arancione{color:orange;}
+.rossa{color:#ff5252;}
+.viola{color:#ba68c8;}
+.nera{color:#9e9e9e;}
+.bronzo{color:#b87333;}
+.argento{color:silver;}
+.oro{color:gold;}
+.diamante{color:#64b5f6;}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<table>
+
+<tr>
+
+<th class="attacco">ATTACCO</th>
+
+<th class="resistenza">RESISTENZA</th>
+
+</tr>
+
+<tr>
+
+<td class="input">
+
+<input id="attacco" type="number" value="120">
+
+<div id="fasciaAttacco" class="fascia"></div>
+
+<select id="malusAttacco">
+
+<option value="0">0</option>
+<option value="1">-1</option>
+<option value="2">-2</option>
+<option value="3">-3</option>
+
+</select>
+
+</td>
+
+<td class="input">
+
+<input id="resistenza" type="number" value="90">
+
+<div id="fasciaResistenza" class="fascia"></div>
+
+<select id="malusResistenza">
+
+<option value="0">0</option>
+<option value="1">-1</option>
+<option value="2">-2</option>
+<option value="3">-3</option>
+
+</select>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td class="dannoTitolo">
+DANNO MASSIMO
+</td>
+
+<td class="danno">
+<span id="danno">0</span>
+</td>
+
+</tr>
+
+</table>
+
+</div>
+
+<script>
+    function fascia(valore){
+
+    if(valore<=29) return 1;
+    if(valore<=59) return 2;
+    if(valore<=89) return 3;
+    if(valore<=119) return 4;
+    if(valore<=149) return 5;
+    if(valore==150) return 6;
+    if(valore<=199) return 7;
+    if(valore<=224) return 8;
+    if(valore<=255) return 9;
+
+    return 10;
+
+}
+
+function nomeFascia(f){
+
+    switch(f){
+
+        case 1:return "Bianca";
+        case 2:return "Gialla";
+        case 3:return "Arancione";
+        case 4:return "Rossa";
+        case 5:return "Viola";
+        case 6:return "Nera";
+        case 7:return "Bronzo";
+        case 8:return "Argento";
+        case 9:return "Oro";
+        default:return "Diamante";
+
+    }
+
+}
+
+function classeFascia(f){
+
+    switch(f){
+
+        case 1:return "bianca";
+        case 2:return "gialla";
+        case 3:return "arancione";
+        case 4:return "rossa";
+        case 5:return "viola";
+        case 6:return "nera";
+        case 7:return "bronzo";
+        case 8:return "argento";
+        case 9:return "oro";
+        default:return "diamante";
+
+    }
+
+}
+const attacco = document.getElementById("attacco");
+const resistenza = document.getElementById("resistenza");
+
+const malusAttacco = document.getElementById("malusAttacco");
+const malusResistenza = document.getElementById("malusResistenza");
+
+function calcola(){
+
+    const valoreAttacco = Number(attacco.value) || 0;
+    const valoreResistenza = Number(resistenza.value) || 0;
+
+    let fasciaAttacco = fascia(valoreAttacco);
+    let fasciaResistenza = fascia(valoreResistenza);
+
+    fasciaAttacco -= Number(malusAttacco.value);
+    fasciaResistenza -= Number(malusResistenza.value);
+
+    if(fasciaAttacco < 1) fasciaAttacco = 1;
+    if(fasciaResistenza < 1) fasciaResistenza = 1;
+
+    const testoAttacco = document.getElementById("fasciaAttacco");
+    const testoResistenza = document.getElementById("fasciaResistenza");
+
+    testoAttacco.textContent = nomeFascia(fasciaAttacco);
+    testoResistenza.textContent = nomeFascia(fasciaResistenza);
+
+    testoAttacco.className = "fascia " + classeFascia(fasciaAttacco);
+    testoResistenza.className = "fascia " + classeFascia(fasciaResistenza);
+
+    let differenza = fasciaAttacco - fasciaResistenza;
+
+    if(differenza < 0)
+        differenza = 0;
+
+    document.getElementById("danno").textContent = differenza * 10;
+
+}
+attacco.addEventListener("input", calcola);
+resistenza.addEventListener("input", calcola);
+
+malusAttacco.addEventListener("change", calcola);
+malusResistenza.addEventListener("change", calcola);
+
+calcola();
+</script>
+
+</body>
+</html>
