@@ -279,7 +279,6 @@ function calcola(scheda){
     testoAttacco.className = "fascia " + classeFascia(fasciaAttacco);
     testoResistenza.className = "fascia " + classeFascia(fasciaResistenza);
 
-    letActive = fasciaAttacco - fasciaResistenza;
     let differenza = fasciaAttacco - fasciaResistenza;
 
     if(differenza < 0)
@@ -296,7 +295,7 @@ function creaCalcolatore(eliminabile) {
     const scheda = document.createElement("div");
     scheda.className = "container";
     
-    // HTML interno con classi al posto di ID univoci e l'aggiunta del campo "nome player"
+    // HTML interno con l'aggiunta del campo "nome player"
     scheda.innerHTML = `
         <table>
             <tr>
@@ -350,7 +349,7 @@ function creaCalcolatore(eliminabile) {
         scheda.appendChild(btnElimina);
     }
 
-    // Aggiunge i listener per calcolare in tempo reale quando cambiano i dati (escludendo il nome player che non influisce sul calcolo)
+    // Aggiunge i listener per calcolare in tempo reale quando cambiano i dati
     const inputsCalcolo = scheda.querySelectorAll("input[type='number'], select");
     inputsCalcolo.forEach(elemento => {
         elemento.addEventListener("input", () => calcola(scheda));
