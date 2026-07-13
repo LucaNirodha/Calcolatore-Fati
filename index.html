@@ -1,205 +1,172 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Calcolatore Danni</title>
 
 <style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,Helvetica,sans-serif;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-body{
-    background:#202020;
-    display:flex;
-    flex-direction: column;
-    align-items:center;
-    min-height:100vh;
-    padding: 30px 10px;
+body {
+    background: #202020;
+    /* Modificato per permettere lo scorrimento e la griglia al posto di centrare un singolo elemento */
+    padding: 30px; 
 }
 
-/* Contenitore per allineare i calcolatori in modo ordinato */
-.griglia {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 25px;
-    width: 100%;
-    max-width: 1600px;
-}
-
-.container{
-    width:720px;
-    background:#2e2e2e;
-    border-radius:12px;
-    box-shadow:0 0 20px rgba(0,0,0,.5);
-    overflow:hidden;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-}
-
-th,td{
-    border:2px solid #111;
-    text-align:center;
-    padding:15px;
-}
-
-th{
-    font-size:28px;
-}
-
-.attacco{
-    background:#d32f2f;
-    color:white;
-}
-
-.resistenza{
-    background:#fbc02d;
-    color:black;
-}
-
-.input{
-    background:#aed581;
-}
-
-input{
-    width:100%;
-    background:transparent;
-    border:none;
-    text-align:center;
-    font-size:42px;
-    font-weight:bold;
-    outline:none;
-}
-
-.fascia{
-    margin-top:10px;
-    font-size:22px;
-    font-weight:bold;
-}
-
-select{
-    margin-top:10px;
-    font-size:18px;
-    padding:6px;
-    border-radius:6px;
-}
-
-.dannoTitolo{
-    background:#ffee58;
-    color:black;
-    font-size:28px;
-}
-
-.danno{
-    background:#b71c1c;
-    color:white;
-    font-size:60px;
-    font-weight:bold;
-}
-
-.bianca{color:white;}
-.gialla{color:#ffee58;}
-.arancione{color:orange;}
-.rossa{color:#ff5252;}
-.viola{color:#ba68c8;}
-.nera{color:#9e9e9e;}
-.bronzo{color:#b87333;}
-.argento{color:silver;}
-.oro{color:gold;}
-.diamante{color:#64b5f6;}
-
-/* --- NUOVI STILI AGGIUNTI PER IL PLAYER E I PULSANTI --- */
-
-/* Barra superiore per i controlli */
-.controlli {
-    margin-bottom: 25px;
+/* --- NUOVI STILI PER LA STRUTTURA A GRIGLIA E I PULSANTI --- */
+.header-controlli {
     text-align: center;
+    margin-bottom: 30px;
 }
 
-.btn-aggiungi {
-    background: #4caf50;
-    color: white;
-    border: none;
+#btn-aggiungi {
     padding: 12px 24px;
     font-size: 18px;
-    font-weight: bold;
+    background: #aed581;
+    border: none;
     border-radius: 8px;
     cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    transition: background 0.2s, transform 0.1s;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(0,0,0,.3);
 }
 
-.btn-aggiungi:hover {
-    background: #43a047;
+.griglia-calcolatori {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Massimo 2 colonne */
+    gap: 30px;
+    max-width: 1600px;
+    margin: 0 auto;
 }
 
-.btn-aggiungi:active {
-    transform: scale(0.98);
+@media(max-width: 900px) {
+    .griglia-calcolatori { grid-template-columns: 1fr; } /* Diventa a 1 colonna su schermi piccoli */
 }
 
-/* Area del nome del giocatore in cima al calcolatore */
-.player-header {
-    background: #1a1a1a;
-    padding: 10px;
-    border-bottom: 2px solid #111;
+.blocco-calcolatore {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.player-input {
-    width: 100% !important;
-    background: transparent !important;
-    border: none !important;
-    text-align: center !important;
-    font-size: 22px !important; /* Sovrascrive il font-size generico di 42px degli input numerici */
-    font-weight: bold !important;
-    color: #ffffff !important;
-    outline: none !important;
+.header-player {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #2e2e2e;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,.5);
 }
 
-.player-input::placeholder {
-    color: #757575;
-    font-style: italic;
-    font-weight: normal;
+.nome-player {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    outline: none;
+    width: 100%;
 }
 
-/* Riga per il pulsante di eliminazione calcolatore */
-.riga-elimina td {
+.nome-player::placeholder { color: #888; }
+
+.btn-elimina {
     background: #d32f2f;
     color: white;
-    font-weight: bold;
-    font-size: 18px;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
     cursor: pointer;
-    border-top: 2px solid #111;
-    transition: background 0.2s;
+    font-weight: bold;
+    font-size: 16px;
 }
 
-.riga-elimina td:hover {
+/* --- STILI ORIGINALI (Adattati per le classi invece che per gli ID) --- */
+.container {
+    width: 100%; /* Adattato al 100% per riempire la sua colonna */
+    background: #2e2e2e;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,.5);
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 2px solid #111;
+    text-align: center;
+    padding: 15px;
+}
+
+th { font-size: 28px; }
+
+.attacco { background: #d32f2f; color: white; }
+.resistenza { background: #fbc02d; color: black; }
+.input { background: #aed581; }
+
+.input-valore {
+    width: 100%;
+    background: transparent;
+    border: none;
+    text-align: center;
+    font-size: 42px;
+    font-weight: bold;
+    outline: none;
+}
+
+.fascia {
+    margin-top: 10px;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+select {
+    margin-top: 10px;
+    font-size: 18px;
+    padding: 6px;
+    border-radius: 6px;
+}
+
+.dannoTitolo {
+    background: #ffee58;
+    color: black;
+    font-size: 28px;
+}
+
+.danno {
     background: #b71c1c;
+    color: white;
+    font-size: 60px;
+    font-weight: bold;
 }
 
+.bianca{color:white;} .gialla{color:#ffee58;} .arancione{color:orange;}
+.rossa{color:#ff5252;} .viola{color:#ba68c8;} .nera{color:#9e9e9e;}
+.bronzo{color:#b87333;} .argento{color:silver;} .oro{color:gold;}
+.diamante{color:#64b5f6;}
 </style>
-
 </head>
 
 <body>
 
-<div class="controlli">
-    <button class="btn-aggiungi" id="aggiungiCalcolatore">＋ Aggiungi Calcolatore</button>
+<div class="header-controlli">
+    <button id="btn-aggiungi">Aggiungi Calcolatore</button>
 </div>
 
-<div class="griglia" id="grigliaCalcolatori"></div>
+<div id="griglia" class="griglia-calcolatori">
+    </div>
 
 <script>
+// --- LE TUE FUNZIONI ORIGINALI (Senza nessuna modifica logica) ---
 function fascia(valore){
     if(valore<=29) return 1;
     if(valore<=59) return 2;
@@ -215,161 +182,133 @@ function fascia(valore){
 
 function nomeFascia(f){
     switch(f){
-        case 1:return "Bianca";
-        case 2:return "Gialla";
-        case 3:return "Arancione";
-        case 4:return "Rossa";
-        case 5:return "Viola";
-        case 6:return "Nera";
-        case 7:return "Bronzo";
-        case 8:return "Argento";
-        case 9:return "Oro";
+        case 1:return "Bianca"; case 2:return "Gialla"; case 3:return "Arancione";
+        case 4:return "Rossa"; case 5:return "Viola"; case 6:return "Nera";
+        case 7:return "Bronzo"; case 8:return "Argento"; case 9:return "Oro";
         default:return "Diamante";
     }
 }
 
 function classeFascia(f){
     switch(f){
-        case 1:return "bianca";
-        case 2:return "gialla";
-        case 3:return "arancione";
-        case 4:return "rossa";
-        case 5:return "viola";
-        case 6:return "nera";
-        case 7:return "bronzo";
-        case 8:return "argento";
-        case 9:return "oro";
+        case 1:return "bianca"; case 2:return "gialla"; case 3:return "arancione";
+        case 4:return "rossa"; case 5:return "viola"; case 6:return "nera";
+        case 7:return "bronzo"; case 8:return "argento"; case 9:return "oro";
         default:return "diamante";
     }
 }
 
-// Funzione isolata di calcolo per la singola scheda
-function calcola(scheda){
-    const attacco = scheda.querySelector(".input-attacco");
-    const resistenza = scheda.querySelector(".input-resistenza");
-    const malusAttacco = scheda.querySelector(".malus-attacco");
-    const malusResistenza = scheda.querySelector(".malus-resistenza");
+// --- GESTIONE DEI CALCOLATORI MULTIPLI ---
+const griglia = document.getElementById("griglia");
+const btnAggiungi = document.getElementById("btn-aggiungi");
 
-    const valoreAttacco = Number(attacco.value) || 0;
-    const valoreResistenza = Number(resistenza.value) || 0;
-
-    let fasciaAttacco = fascia(valoreAttacco);
-    let fasciaResistenza = fascia(valoreResistenza);
-
-    fasciaAttacco -= Number(malusAttacco.value);
-    fasciaResistenza -= Number(malusResistenza.value);
-
-    if(fasciaAttacco < 1) fasciaAttacco = 1;
-    if(fasciaResistenza < 1) fasciaResistenza = 1;
-
-    const testoAttacco = scheda.querySelector(".fascia-attacco");
-    const testoResistenza = scheda.querySelector(".fascia-resistenza");
-
-    testoAttacco.textContent = nomeFascia(fasciaAttacco);
-    testoResistenza.textContent = nomeFascia(fasciaResistenza);
-
-    testoAttacco.className = "fascia " + classeFascia(fasciaAttacco);
-    testoResistenza.className = "fascia " + classeFascia(fasciaResistenza);
-
-    let differenza = fasciaAttacco - fasciaResistenza;
-
-    if(differenza < 0)
-        differenza = 0;
-
-    scheda.querySelector(".valore-danno").textContent = differenza * 10;
-}
-
-// Generatore dinamico delle schede calcolatore
-function creaCalcolatore(eliminabile) {
-    const griglia = document.getElementById("grigliaCalcolatori");
+// Questa funzione crea la struttura HTML del tuo calcolatore
+function creaCalcolatore(isFisso = false) {
+    const blocco = document.createElement("div");
+    blocco.className = "blocco-calcolatore";
     
-    const scheda = document.createElement("div");
-    scheda.className = "container";
-    
-    let htmlContent = `
-        <table>
-            <tr>
-                <td colspan="2" class="player-header">
-                    <input type="text" class="player-input" placeholder="Inserire nome player">
-                </td>
-            </tr>
-            <tr>
-                <th class="attacco">ATTACCO</th>
-                <th class="resistenza">RESISTENZA</th>
-            </tr>
-            <tr>
-                <td class="input">
-                    <input class="input-attacco" type="number" value="120" step="5">
-                    <div class="fascia fascia-attacco"></div>
-                    <select class="malus-attacco">
-                        <option value="0">0</option>
-                        <option value="1">-1</option>
-                        <option value="2">-2</option>
-                        <option value="3">-3</option>
-                    </select>
-                </td>
-                <td class="input">
-                    <input class="input-resistenza" type="number" value="90" step="5">
-                    <div class="fascia fascia-resistenza"></div>
-                    <select class="malus-resistenza">
-                        <option value="0">0</option>
-                        <option value="1">-1</option>
-                        <option value="2">-2</option>
-                        <option value="3">-3</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td class="dannoTitolo">DANNO MASSIMO</td>
-                <td class="danno">
-                    <span class="valore-danno">0</span>
-                </td>
-            </tr>
+    // Se isFisso è true, non mostriamo il bottone "X"
+    const bottoneElimina = isFisso ? '' : '<button class="btn-elimina">X</button>';
+
+    blocco.innerHTML = `
+        <div class="header-player">
+            <input type="text" class="nome-player" placeholder="Nome Player...">
+            ${bottoneElimina}
+        </div>
+        <div class="container">
+            <table>
+                <tr>
+                    <th class="attacco">ATTACCO</th>
+                    <th class="resistenza">RESISTENZA</th>
+                </tr>
+                <tr>
+                    <td class="input">
+                        <input class="input-valore campo-attacco" type="number" value="120" step="5">
+                        <div class="fascia testo-fascia-attacco"></div>
+                        <select class="malus-attacco">
+                            <option value="0">0</option><option value="1">-1</option>
+                            <option value="2">-2</option><option value="3">-3</option>
+                        </select>
+                    </td>
+                    <td class="input">
+                        <input class="input-valore campo-resistenza" type="number" value="90" step="5">
+                        <div class="fascia testo-fascia-resistenza"></div>
+                        <select class="malus-resistenza">
+                            <option value="0">0</option><option value="1">-1</option>
+                            <option value="2">-2</option><option value="3">-3</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="dannoTitolo">DANNO MASSIMO</td>
+                    <td class="danno"><span class="valore-danno">0</span></td>
+                </tr>
+            </table>
+        </div>
     `;
 
-    // Aggiunge la riga con il pulsante "Elimina" solo se la scheda è impostata come eliminabile
-    if (eliminabile) {
-        htmlContent += `
-            <tr class="riga-elimina">
-                <td colspan="2" class="btn-elimina">
-                    ELIMINA CALCOLATORE
-                </td>
-            </tr>
-        `;
+    // Seleziona gli elementi solo per QUESTO specifico calcolatore
+    const attacco = blocco.querySelector(".campo-attacco");
+    const resistenza = blocco.querySelector(".campo-resistenza");
+    const malusAttacco = blocco.querySelector(".malus-attacco");
+    const malusResistenza = blocco.querySelector(".malus-resistenza");
+    
+    const testoAttacco = blocco.querySelector(".testo-fascia-attacco");
+    const testoResistenza = blocco.querySelector(".testo-fascia-resistenza");
+    const spanDanno = blocco.querySelector(".valore-danno");
+
+    // La tua funzione originale di calcolo, contestualizzata al blocco corrente
+    function calcola() {
+        const valoreAttacco = Number(attacco.value) || 0;
+        const valoreResistenza = Number(resistenza.value) || 0;
+
+        let fasciaAttacco = fascia(valoreAttacco);
+        let fasciaResistenza = fascia(valoreResistenza);
+
+        fasciaAttacco -= Number(malusAttacco.value);
+        fasciaResistenza -= Number(malusResistenza.value);
+
+        if(fasciaAttacco < 1) fasciaAttacco = 1;
+        if(fasciaResistenza < 1) fasciaResistenza = 1;
+
+        testoAttacco.textContent = nomeFascia(fasciaAttacco);
+        testoResistenza.textContent = nomeFascia(fasciaResistenza);
+
+        testoAttacco.className = "fascia " + classeFascia(fasciaAttacco);
+        testoResistenza.className = "fascia " + classeFascia(fasciaResistenza);
+
+        let differenza = fasciaAttacco - fasciaResistenza;
+
+        if(differenza < 0) differenza = 0;
+
+        spanDanno.textContent = differenza * 10;
     }
 
-    htmlContent += `</table>`;
-    scheda.innerHTML = htmlContent;
+    // Aggiungo i listener al blocco corrente
+    attacco.addEventListener("input", calcola);
+    resistenza.addEventListener("input", calcola);
+    malusAttacco.addEventListener("change", calcola);
+    malusResistenza.addEventListener("change", calcola);
 
-    // Collega gli eventi di ascolto direttamente agli input di questa singola scheda
-    const inputsCalcolo = scheda.querySelectorAll(".input-attacco, .input-resistenza, .malus-attacco, .malus-resistenza");
-    inputsCalcolo.forEach(elemento => {
-        elemento.addEventListener("input", () => calcola(scheda));
-        elemento.addEventListener("change", () => calcola(scheda));
-    });
-
-    // Se è impostato l'evento di eliminazione, lo colleghiamo al click sulla cella
-    if (eliminabile) {
-        const btnElimina = scheda.querySelector(".btn-elimina");
-        btnElimina.addEventListener("click", () => {
-            scheda.remove();
+    // Se non è fisso, abilito il bottone per cancellarlo
+    if (!isFisso) {
+        blocco.querySelector(".btn-elimina").addEventListener("click", function() {
+            blocco.remove();
         });
     }
 
-    // Inserisce la scheda ed esegue il primo calcolo iniziale di default
-    griglia.appendChild(scheda);
-    calcola(scheda);
+    // Eseguo il calcolo iniziale e lo aggiungo alla griglia
+    calcola();
+    griglia.appendChild(blocco);
 }
 
-// 1. Genera i 2 calcolatori fissi obbligatori all'avvio
-creaCalcolatore(false);
-creaCalcolatore(false);
+// Associa il tasto "Aggiungi" alla creazione di un calcolatore libero (cancellabile)
+btnAggiungi.addEventListener("click", () => creaCalcolatore(false));
 
-// 2. Gestisce la creazione di nuovi calcolatori tramite il pulsante in alto
-document.getElementById("aggiungiCalcolatore").addEventListener("click", () => {
-    creaCalcolatore(true);
-});
+// INIZIALIZZAZIONE: Crea automaticamente i 2 calcolatori FISSI (non cancellabili) all'avvio
+creaCalcolatore(true);
+creaCalcolatore(true);
+
 </script>
-
 </body>
 </html>
