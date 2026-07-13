@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Calcolatore Danni</title>
+<title>Calcolatore Danni Multiplo</title>
 
 <style>
 
@@ -17,112 +17,146 @@
 }
 
 body{
-
     background:#202020;
     display:flex;
-    justify-content:center;
+    flex-direction: column;
     align-items:center;
-    height:100vh;
-
+    min-height:100vh;
+    padding: 30px 10px;
 }
 
-.container{
+/* Area dei controlli principali */
+.controlli {
+    margin-bottom: 30px;
+    text-align: center;
+}
 
-    width:720px;
+.btn-aggiungi {
+    background: #4caf50;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: background 0.2s, transform 0.1s;
+}
+
+.btn-aggiungi:hover {
+    background: #43a047;
+}
+
+.btn-aggiungi:active {
+    transform: scale(0.98);
+}
+
+/* Griglia per contenere tutti i calcolatori */
+.griglia-calcolatori {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+    width: 100%;
+    max-width: 1600px;
+}
+
+/* Singola scheda del calcolatore */
+.container{
+    width: 480px;
     background:#2e2e2e;
     border-radius:12px;
     box-shadow:0 0 20px rgba(0,0,0,.5);
     overflow:hidden;
-
+    display: flex;
+    flex-direction: column;
 }
 
 table{
-
     width:100%;
     border-collapse:collapse;
-
 }
 
 th,td{
-
     border:2px solid #111;
     text-align:center;
     padding:15px;
-
 }
 
 th{
-
-    font-size:28px;
-
+    font-size:24px;
 }
 
 .attacco{
-
     background:#d32f2f;
     color:white;
-
 }
 
 .resistenza{
-
     background:#fbc02d;
     color:black;
-
 }
 
 .input{
-
     background:#aed581;
-
 }
 
 input{
-
     width:100%;
     background:transparent;
     border:none;
     text-align:center;
-    font-size:42px;
+    font-size:36px;
     font-weight:bold;
     outline:none;
-
 }
 
 .fascia{
-
     margin-top:10px;
-    font-size:22px;
+    font-size:20px;
     font-weight:bold;
-
 }
 
 select{
-
     margin-top:10px;
-    font-size:18px;
+    font-size:16px;
     padding:6px;
     border-radius:6px;
-
 }
 
 .dannoTitolo{
-
     background:#ffee58;
     color:black;
-    font-size:28px;
-
+    font-size:22px;
 }
 
 .danno{
-
     background:#b71c1c;
     color:white;
-    font-size:60px;
+    font-size:48px;
     font-weight:bold;
-
 }
 
+/* Pulsante per eliminare il singolo calcolatore */
+.btn-elimina {
+    background: #e53935;
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.2s;
+    border-top: 2px solid #111;
+}
+
+.btn-elimina:hover {
+    background: #b71c1c;
+}
+
+/* Colori delle fasce */
 .bianca{color:white;}
 .gialla{color:#ffee58;}
 .arancione{color:orange;}
@@ -140,75 +174,16 @@ select{
 
 <body>
 
-<div class="container">
-
-<table>
-
-<tr>
-
-<th class="attacco">ATTACCO</th>
-
-<th class="resistenza">RESISTENZA</th>
-
-</tr>
-
-<tr>
-
-<td class="input">
-
-<input id="attacco" type="number" value="120" step="5">
-
-<div id="fasciaAttacco" class="fascia"></div>
-
-<select id="malusAttacco">
-
-<option value="0">0</option>
-<option value="1">-1</option>
-<option value="2">-2</option>
-<option value="3">-3</option>
-
-</select>
-
-</td>
-
-<td class="input">
-
-<input id="resistenza" type="number" value="90"step="5">
-
-<div id="fasciaResistenza" class="fascia"></div>
-
-<select id="malusResistenza">
-
-<option value="0">0</option>
-<option value="1">-1</option>
-<option value="2">-2</option>
-<option value="3">-3</option>
-
-</select>
-
-</td>
-
-</tr>
-
-<tr>
-
-<td class="dannoTitolo">
-DANNO MASSIMO
-</td>
-
-<td class="danno">
-<span id="danno">0</span>
-</td>
-
-</tr>
-
-</table>
-
+<div class="controlli">
+    <button class="btn-aggiungi" id="aggiungiCalcolatore">＋ Aggiungi Calcolatore</button>
 </div>
 
-<script>
-    function fascia(valore){
+<div class="griglia-calcolatori" id="contenitoreCalcolatori"></div>
 
+<script>
+
+// Funzione per calcolare la fascia numerica
+function fascia(valore){
     if(valore<=29) return 1;
     if(valore<=59) return 2;
     if(valore<=89) return 3;
@@ -218,15 +193,12 @@ DANNO MASSIMO
     if(valore<=199) return 7;
     if(valore<=224) return 8;
     if(valore<=255) return 9;
-
     return 10;
-
 }
 
+// Restituisce il nome testuale della fascia
 function nomeFascia(f){
-
     switch(f){
-
         case 1:return "Bianca";
         case 2:return "Gialla";
         case 3:return "Arancione";
@@ -237,15 +209,12 @@ function nomeFascia(f){
         case 8:return "Argento";
         case 9:return "Oro";
         default:return "Diamante";
-
     }
-
 }
 
+// Restituisce la classe CSS associata al colore della fascia
 function classeFascia(f){
-
     switch(f){
-
         case 1:return "bianca";
         case 2:return "gialla";
         case 3:return "arancione";
@@ -253,58 +222,4 @@ function classeFascia(f){
         case 5:return "viola";
         case 6:return "nera";
         case 7:return "bronzo";
-        case 8:return "argento";
-        case 9:return "oro";
-        default:return "diamante";
-
-    }
-
-}
-const attacco = document.getElementById("attacco");
-const resistenza = document.getElementById("resistenza");
-
-const malusAttacco = document.getElementById("malusAttacco");
-const malusResistenza = document.getElementById("malusResistenza");
-
-function calcola(){
-
-    const valoreAttacco = Number(attacco.value) || 0;
-    const valoreResistenza = Number(resistenza.value) || 0;
-
-    let fasciaAttacco = fascia(valoreAttacco);
-    let fasciaResistenza = fascia(valoreResistenza);
-
-    fasciaAttacco -= Number(malusAttacco.value);
-    fasciaResistenza -= Number(malusResistenza.value);
-
-    if(fasciaAttacco < 1) fasciaAttacco = 1;
-    if(fasciaResistenza < 1) fasciaResistenza = 1;
-
-    const testoAttacco = document.getElementById("fasciaAttacco");
-    const testoResistenza = document.getElementById("fasciaResistenza");
-
-    testoAttacco.textContent = nomeFascia(fasciaAttacco);
-    testoResistenza.textContent = nomeFascia(fasciaResistenza);
-
-    testoAttacco.className = "fascia " + classeFascia(fasciaAttacco);
-    testoResistenza.className = "fascia " + classeFascia(fasciaResistenza);
-
-    let differenza = fasciaAttacco - fasciaResistenza;
-
-    if(differenza < 0)
-        differenza = 0;
-
-    document.getElementById("danno").textContent = differenza * 10;
-
-}
-attacco.addEventListener("input", calcola);
-resistenza.addEventListener("input", calcola);
-
-malusAttacco.addEventListener("change", calcola);
-malusResistenza.addEventListener("change", calcola);
-
-calcola();
-</script>
-
-</body>
-</html>
+        case 8:
