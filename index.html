@@ -295,7 +295,7 @@ function creaCalcolatore(eliminabile) {
     const scheda = document.createElement("div");
     scheda.className = "container";
     
-    // HTML interno con l'aggiunta del campo "nome player"
+    // HTML interno della scheda
     scheda.innerHTML = `
         <table>
             <tr>
@@ -349,14 +349,7 @@ function creaCalcolatore(eliminabile) {
         scheda.appendChild(btnElimina);
     }
 
-    // Aggiunge i listener per calcolare in tempo reale quando cambiano i dati
-    const inputsCalcolo = scheda.querySelectorAll("input[type='number'], select");
-    inputsCalcolo.forEach(elemento => {
-        elemento.addEventListener("input", () => calcola(scheda));
-        elemento.addEventListener("change", () => calcola(scheda));
-    });
-
-    // Inserisce la scheda nella griglia ed esegue il primo calcolo
+    // Inserisce la scheda nella griglia ed esegue il primo calcolo di inizializzazione
     contenitore.appendChild(scheda);
     calcola(scheda);
 }
@@ -368,6 +361,23 @@ creaCalcolatore(false);
 // Gestione del click sul pulsante per aggiungere nuovi calcolatori
 document.getElementById("aggiungiCalcolatore").addEventListener("click", () => {
     creaCalcolatore(true);
+});
+
+// EVENT DELEGATION: Cattura qualsiasi modifica all'interno del contenitore dei calcolatori
+const contenitoreCalcolatori = document.getElementById("contenitoreCalcolatori");
+
+contenitoreCalcolatori.addEventListener("input", (event) => {
+    const scheda = event.target.closest(".container");
+    if (scheda) {
+        calcola(scheda);
+    }
+});
+
+contenitoreCalcolatori.addEventListener("change", (event) => {
+    const scheda = event.target.closest(".container");
+    if (scheda) {
+        calcola(scheda);
+    }
 });
 
 </script>
